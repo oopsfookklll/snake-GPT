@@ -1,0 +1,141 @@
+The core classes, functions, and methods necessary for the snake game are:
+
+1. `Game` class: This class will handle the game loop, user input, and game over conditions.
+2. `Snake` class: This class will handle the snake's position, movement, and growth.
+3. `Food` class: This class will handle the food's position and the action when the snake eats the food.
+4. `draw_board` function: This function will draw the game board, the snake, and the food.
+
+Now, let's write the code for each of these components.
+
+requirements.txt
+```plaintext
+pygame==2.0.1
+```
+
+game.py
+```python
+import pygame
+from snake import Snake
+from food import Food
+
+class Game:
+    def __init__(self, screen_size, snake, food):
+        self.screen_size = screen_size
+        self.snake = snake
+        self.food = food
+        self.score = 0
+        self.game_over = False
+
+    def handle_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game_over = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.snake.change_direction('up')
+                elif event.key == pygame.K_s:
+                    self.snake.change_direction('down')
+                elif event.key == pygame.K_a:
+                    self.snake.change_direction('left')
+                elif event.key == pygame.K_d:
+                    self.snake.change_direction('right')
+
+    def update(self):
+        if self.snake.move() == 'game_over':
+            self.game_over = True
+        if self.snake.head == self.food.position:
+            self.snake.grow()
+            self.food.randomize_position()
+            self.score += 1
+
+    def draw(self, screen):
+        screen.fill((0, 0, 0))
+        self.snake.draw(screen)
+        self.food.draw(screen)
+        pygame.display.flip()
+
+    def run(self):
+        pygame.init()
+        screen = pygame.display.set_mode(self.screen_size)
+        clock = pygame.time.Clock()
+
+        while not self.game_over:
+            self.handle_input()
+            self.update()
+            self.draw(screen)
+            clock.tick(10)
+
+        pygame.quit()
+```
+
+snake.py
+```python
+import pygame
+
+class Snake:
+    def __init__(self, initial_body, direction):
+        self.body = initial_body
+        self.direction = direction
+
+    @property
+    def head(self):
+        return self.body[0]
+
+    def change_direction(self, direction):
+        self.direction = direction
+
+    def move(self):
+        if self.direction == 'up':
+            new_head = (self.head[0], self.head[1] - 1)
+        elif self.direction == 'down':
+            new_head = (self.head[0], self.head[1] + 1)
+        elif self.direction == 'left':
+            new_head = (self.head[0] - 1, self.head[1])
+        elif self.direction == 'right':
+            new_head = (self.head[0] + 1, self.head[1])
+
+        if new_head in self.body or new_head[0] < 0 or new_head[0] >= 50 or new_head[1] < 0 or new_head[1] >= 50:
+            return 'game_over'
+
+        self.body.insert(0, new_head)
+        self.body.pop()
+
+    def grow(self):
+        self.body.append(self.body[-1])
+
+    def draw(self, screen):
+        for segment in self.body:
+            pygame.draw.rect(screen, (255, 255, 255), (segment[0]*10, segment[1]*10, 10, 10))
+```
+
+food.py
+```python
+import pygame
+import random
+
+class Food:
+    def __init__(self):
+        self.position = (random.randint(0, 49), random.randint(0, 49))
+
+    def randomize_position(self):
+        self.position = (random.randint(0, 49), random.randint(0, 49))
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), (self.position[0]*10, self.position[1]*10, 10, 10))
+```
+
+main.py
+```python
+from game import Game
+from snake import Snake
+from food import Food
+
+def main():
+    snake = Snake([(25, 25)], 'up')
+    food = Food()
+    game = Game((500, 500), snake, food)
+    game.run()
+
+if __name__ == "__main__":
+    main()
+```
