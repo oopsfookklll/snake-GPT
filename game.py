@@ -1,6 +1,7 @@
 import pygame
 from snake import Snake
 from food import Food
+import random
 
 class Game:
     def __init__(self, screen_size, snake, food):
@@ -9,6 +10,13 @@ class Game:
         self.food = food
         self.score = 0
         self.game_over = False
+        pygame.font.init() 
+        self.font = pygame.font.Font(None, 32)
+
+    def render_score(self, screen):
+        score_text = f"Score: {self.score}"  
+        score_image = self.font.render(score_text, True, (255, 255, 255))
+        screen.blit(score_image, (10, 10))
 
     def handle_input(self):
         for event in pygame.event.get():
@@ -27,6 +35,12 @@ class Game:
     def update(self):
         if self.snake.move() == 'game_over':
             self.game_over = True
+        if self.snake.eat(self.food):
+            r = random.randint(0, 255)
+            g = random.randint(0, 255) 
+            b = random.randint(0, 255)
+            self.snake.color = (r, g, b)
+            self.score += 1
         if self.snake.head == self.food.position:
             self.snake.grow()
             self.food.randomize_position()
@@ -34,6 +48,7 @@ class Game:
 
     def draw(self, screen):
         screen.fill((0, 0, 0))
+        self.render_score(screen)
         self.snake.draw(screen)
         self.food.draw(screen)
         pygame.display.flip()

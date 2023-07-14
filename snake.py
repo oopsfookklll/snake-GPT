@@ -4,6 +4,14 @@ class Snake:
     def __init__(self, initial_body, direction):
         self.body = initial_body
         self.direction = direction
+        self.color = (255, 255, 255) # white by default
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = value
 
     @property
     def head(self):
@@ -11,6 +19,12 @@ class Snake:
 
     def change_direction(self, direction):
         self.direction = direction
+
+    def eat(self, food):
+        if self.head == food.position:
+            return True
+        else:
+            return False
 
     def move(self):
         if self.direction == 'up':
@@ -33,4 +47,4 @@ class Snake:
 
     def draw(self, screen):
         for segment in self.body:
-            pygame.draw.rect(screen, (255, 255, 255), (segment[0]*10, segment[1]*10, 10, 10))
+            pygame.draw.rect(screen, self.color, (segment[0]*10, segment[1]*10, 10, 10))
