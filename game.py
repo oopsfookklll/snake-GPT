@@ -1,6 +1,7 @@
 import pygame
 from snake import Snake
 from food import Food
+from ai_snake import AISnake
 import random
 
 class Game:
@@ -10,6 +11,10 @@ class Game:
         self.food = food
         self.score = 0
         self.game_over = False
+        self.ai_snakes = []
+        for  i in range(5):
+            ai_snake = AISnake()
+            self.ai_snakes.append(ai_snake)
         pygame.font.init() 
         self.font = pygame.font.Font(None, 32)
 
@@ -33,6 +38,8 @@ class Game:
                     self.snake.change_direction('right')
 
     def update(self):
+        for ai_snake in self.ai_snakes:
+            ai_snake.update(self.food) # pass food for targeting
         if self.snake.move() == 'game_over':
             self.game_over = True
         if self.snake.eat(self.food):
@@ -48,6 +55,8 @@ class Game:
 
     def draw(self, screen):
         screen.fill((0, 0, 0))
+        for ai_snake in self.ai_snakes:
+            ai_snake.draw(screen)
         self.render_score(screen)
         self.snake.draw(screen)
         self.food.draw(screen)

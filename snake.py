@@ -1,7 +1,9 @@
 import pygame
 
 class Snake:
-    def __init__(self, initial_body, direction):
+    def __init__(self, initial_body=None, direction="up"):
+        if initial_body is None:
+           initial_body = [(10,10)]
         self.body = initial_body
         self.direction = direction
         self.color = (255, 255, 255) # white by default
