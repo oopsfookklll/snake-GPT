@@ -6,7 +6,7 @@ class Snake:
            initial_body = [(10,10)]
         self.body = initial_body
         self.direction = direction
-        self.color = (255, 255, 255) # white by default
+        self.color = (0, 0, 255) # blue by default
     @property
     def color(self):
         return self._color
