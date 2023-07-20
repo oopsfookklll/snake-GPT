@@ -1,5 +1,3 @@
-# ai_snake.py
-
 import random
 from snake import Snake
 MAX_WIDTH = 500 
@@ -10,7 +8,8 @@ class AISnake(Snake):
     def __init__(self):
         initial_body = [(10,10)]
         direction = 'up'
-        super().__init__(initial_body, direction)
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        super().__init__(initial_body, direction, color)
         self.direction = random.choice(['up','down','left','right'])
 
     def update(self, food):
