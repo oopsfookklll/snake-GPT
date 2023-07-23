@@ -67,10 +67,12 @@ class Game:
         screen = pygame.display.set_mode(self.screen_size)
         clock = pygame.time.Clock()
 
-        while not self.game_over:
-            self.handle_input()
-            self.update()
-            self.draw(screen)
-            clock.tick(10)
-
-        pygame.quit()
+        while True:
+            while not self.game_over:
+                self.handle_input()
+                self.update()
+                self.draw(screen)
+                clock.tick(10)
+            self.snake = Snake([(25, 25)], 'up')
+            self.score = 0
+            self.game_over = False
