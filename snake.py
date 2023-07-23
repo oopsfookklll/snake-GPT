@@ -1,7 +1,7 @@
 import pygame
 
 class Snake:
-    def __init__(self, initial_body=None, direction="up", color=(0, 0, 255)):
+    def __init__(self, initial_body=None, direction="up", color=(255, 0, 0)):
         if initial_body is None:
            initial_body = [(10,10)]
         self.body = initial_body
